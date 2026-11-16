@@ -48,6 +48,8 @@ tr.err td{background:var(--erbg)}
 .bar>div{height:100%;width:0;background:var(--ok);transition:width .25s}
 #log{font:12px/1.6 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;max-height:200px;overflow:auto;white-space:pre-wrap}
 .hint{font-size:12px;color:var(--mut)}
+a.btn{display:inline-block;border-radius:8px;padding:9px 16px;font-weight:600;text-decoration:none;background:var(--pri);color:#fff;border:1px solid var(--pri)}
+a.btn.sec{background:transparent;color:var(--pri)}
 button.sm{padding:6px 12px;font-size:12.5px}
 .toolbar{margin-bottom:8px}
 td.c,th.c{width:34px;text-align:center}
@@ -82,7 +84,7 @@ tr.done td{animation:flashOk 1s}
 <body>
 <header>
   <h1>📥 Import Soal dari Excel</h1>
-  <p>Unggah file template Excel → periksa pratinjau → kirim ke Server <b>soal</b> di Examdigital.</p>
+  <p>Unggah file template Excel → periksa pratinjau → kirim ke sheet <b>soal</b> di Google Apps Script.</p>
 </header>
 
 <main>
@@ -90,8 +92,8 @@ tr.done td{animation:flashOk 1s}
     <h2>1. Template</h2>
     <div class="hint">Terhubung ke: <code id="gasShow"></code></div>
     <div class="row" style="margin-top:10px">
-      <button class="sec" id="btnTpl">⬇️ Unduh Template Excel</button>
-      <span class="hint">Isi template, simpan sebagai .xlsx, lalu unggah di langkah 2.</span>
+      <a class="btn sec" id="btnTpl" href="https://docs.google.com/spreadsheets/d/1ksohztaC7QM4OZ3ZH-RbRObvxfI_Di71/edit?usp=sharing&ouid=114291241468371692145&rtpof=true&sd=true" target="_blank" rel="noopener">📄 Buka Template Excel</a>
+      <span class="hint">Template terbuka di Google Sheets / aplikasi Drive. Isi, lalu simpan sebagai .xlsx (File → Download / Unduh → Microsoft Excel) dan unggah di langkah 2.</span>
     </div>
   </div>
 
@@ -123,7 +125,7 @@ tr.done td{animation:flashOk 1s}
   </div>
 
   <div class="card hide" id="cSend">
-    <h2>4. Kirim ke Server</h2>
+    <h2>4. Kirim ke Apps Script</h2>
     <p class="hint" style="margin-top:0">Hanya baris berstatus <b>Siap</b>/<b>Peringatan</b> yang dikirim. Pengiriman <b>menambah</b> soal di bawah data yang sudah ada (tidak menimpa). Jangan kirim dua kali agar soal tidak dobel.</p>
     <div class="row">
       <button id="btnSend">🚀 Kirim Soal</button>
@@ -154,11 +156,6 @@ const $ = id => document.getElementById(id);
 $('gasShow').textContent = GAS_URL.slice(0, 55) + '…/exec';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let rows = [];   // {no, data, status, msgs}
-
-/* ---------- template (diambil dari Google Drive) ---------- */
-const TEMPLATE_ID  = '1ksohztaC7QM4OZ3ZH-RbRObvxfI_Di71';
-const TEMPLATE_URL = 'https://drive.google.com/uc?export=download&id=' + TEMPLATE_ID;
-$('btnTpl').onclick = () => { window.open(TEMPLATE_URL, '_blank', 'noopener'); };
 
 /* ---------- pilih file ---------- */
 const drop = $('drop'), fin = $('file');
